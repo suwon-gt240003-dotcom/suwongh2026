@@ -834,6 +834,13 @@ select:focus,input[type="text"]:focus{border-color:var(--accent);outline:none;bo
     var present = GROUPS.filter(function (g) { return list.some(function (m) { return m.group === g[0]; }); });
     if (chosen[key] !== "all" && !present.some(function (g) { return g[0] === chosen[key]; })) chosen[key] = "all";
     var sel = chosen[key];
+    var chips = orange.length < 2 ? "" : '<div class="chips" role="group" aria-label="보낸 사람으로 골라 보기">' + 
+    [["all", "전체"]].concat(present).map(function (g) {
+      var n = g[0] === "all" ? list.length : list.filter(function (m) { return m.group === g[0]; }).length;
+      return '<button type="button" class="chip" data-key="' + key + '" data-g="' + g[0] + '" aria-pressed="' + (sel === g[0]) + '">' + 
+        (g[0] === "all" ? "" : '<i class="g-' + g[0] + '"></i>') + g[1] + ' <span class="n">' + n + "</span></button>";
+    }).join("") + "</div>";
+  //
     var shown = sel === "all" ? list : list.filter(function (m) { return m.group === sel; });
     return chips + '<div class="wall">' + shown.map(function (m, i) {
       return '<article class="msg g-' + m.group + '" data-i="' + i + '"><p>' + esc(m.text) + '</p><div class="from">' + (m.sample ? '<span class="who sample">예시</span>' : "") + (GNAME[m.group] ? '<span class="who">' + GNAME[m.group] + "</span>" : "") + esc(m.from || "응원하는 사람") + "</div></article>";
